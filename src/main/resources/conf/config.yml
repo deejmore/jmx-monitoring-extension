@@ -21,6 +21,9 @@ servers:
       username: ""
       password: ""
 
+      keystore: ""
+      keystorePassword: ""
+
 #     You can either use the normal password or encrypt your password and provide the encrypted Password and encryptionKey.
 #     Do not provide both, only provide one and comment out the other.
 
@@ -81,4 +84,3 @@ mbeans:
     metrics:
       include:
         - HeapMemoryUsage.committed : "Heap Memory Usage|Committed"
-

@@ -28,11 +28,23 @@ public class JMXConnectionAdapter {
     private final JMXServiceURL serviceUrl;
     private final String username;
     private final String password;
+    private String keystore = "";
+    private String keystorePassword = "";
+    
 
+    
     private JMXConnectionAdapter(String host, int port, String username, String password) throws MalformedURLException {
         this.serviceUrl = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi");
         this.username = username;
         this.password = password;
+    }
+    
+    private JMXConnectionAdapter(String host, int port, String username, String password, String keystore, String keystorePassword) throws MalformedURLException {
+        this.serviceUrl = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi");
+        this.username = username;
+        this.password = password;
+        this.keystore = keystore;
+        this.keystorePassword = keystorePassword;
     }
 
     private JMXConnectionAdapter(String serviceUrl, String username, String password) throws MalformedURLException {
@@ -40,13 +52,21 @@ public class JMXConnectionAdapter {
         this.username = username;
         this.password = password;
     }
+   
+    private JMXConnectionAdapter(String serviceUrl, String username, String password, String keystore, String keystorePassword) throws MalformedURLException {
+        this.serviceUrl = new JMXServiceURL(serviceUrl);
+        this.username = username;
+        this.password = password;
+        this.keystore = keystore;
+        this.keystorePassword = keystorePassword;
+    }
+    
 
-
-    public static JMXConnectionAdapter create(String serviceUrl, String host, int port, String username, String password) throws MalformedURLException {
+    public static JMXConnectionAdapter create(String serviceUrl, String host, int port, String username, String password, String keystore, String keystorePassword) throws MalformedURLException {
         if (Strings.isNullOrEmpty(serviceUrl)) {
-            return new JMXConnectionAdapter(host, port, username, password);
+        	return new JMXConnectionAdapter(host, port, username, password, keystore, keystorePassword);
         } else {
-            return new JMXConnectionAdapter(serviceUrl, username, password);
+            return new JMXConnectionAdapter(serviceUrl, username, password, keystore, keystorePassword);
         }
     }
 
@@ -54,8 +74,8 @@ public class JMXConnectionAdapter {
         JMXConnector jmxConnector;
         final Map<String, Object> env = new HashMap<String, Object>();
         if (!Strings.isNullOrEmpty(username)) {
-            env.put(JMXConnector.CREDENTIALS, new String[]{username, password});
-            jmxConnector = JMXConnectorFactory.connect(serviceUrl, env);
+        	    env.put(JMXConnector.CREDENTIALS, new String[]{username, password, keystore, keystorePassword});
+        	    jmxConnector = JMXConnectorFactory.connect(serviceUrl, env);
         } else {
             jmxConnector = JMXConnectorFactory.connect(serviceUrl);
         }

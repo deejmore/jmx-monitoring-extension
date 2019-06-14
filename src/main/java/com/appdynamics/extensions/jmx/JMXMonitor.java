@@ -87,8 +87,10 @@ public class JMXMonitor extends ABaseMonitor {
         int port = (portStr == null || portStr == "") ? -1 : Integer.parseInt(portStr);
         String username = convertToString(server.get(USERNAME), "");
         String password = getPassword(server);
+        String keystore = getKeystore(server);
+        String keystorePassword = getKeystorePassword(server);
 
-        JMXConnectionAdapter adapter = JMXConnectionAdapter.create(serviceUrl, host, port, username, password);
+        JMXConnectionAdapter adapter = JMXConnectionAdapter.create(serviceUrl, host, port, username, password, keystore, keystorePassword);
         return new JMXMonitorTask.Builder().
                 metricPrefix(configuration.getMetricPrefix()).
                 metricWriter(taskExecutor.getMetricWriteHelper()).
@@ -110,6 +112,17 @@ public class JMXMonitor extends ABaseMonitor {
             return CryptoUtil.getPassword(cryptoMap);
         }
         return null;
+    }
+    
+    private String getKeystore(Map server)
+    {
+    	return null;
+    }
+
+    
+    private String getKeystorePassword(Map server)
+    {
+    	return null;
     }
 
 
